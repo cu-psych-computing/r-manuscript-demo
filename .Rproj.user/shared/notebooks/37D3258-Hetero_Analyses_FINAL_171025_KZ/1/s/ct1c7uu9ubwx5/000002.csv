@@ -1,0 +1,28 @@
+"0","```r
+rndt_sr <- subset(rndt, response.keys == \"up\") # subset to only select traits endorsed as self-relevant
+#rndtb <- subset(rndtb2, rt >= .01 & rt < 1.45) # 90th percentile or below 
+## ^ Re above, it doesn't seem like we are using this cutoff anymore?
+rndt_sr$rt.z <- scale(rndt_sr$rt)
+rndt_srz <- subset(rndt_sr,  rt.z < 3) #within +3 SD of the mean RT
+rndtz <- rndt_srz[!(rndt_srz$id %in% c(250, 257, 272)), ] 
+rndtz <- within(rndtz, {
+  idcat <- as.factor(id)
+})
+
+write.csv(rndtz, \"heterogeneity_dataset1_traitvalence_spss.csv\", row.names = F)
+
+# with Random Intercepts only
+valrt_intonly <- lmer(logrt ~ valenceE + (1 | id),  data=rndtz)
+summary(valrt_intonly)
+# mle3aaa_intonly
+
+# with Random Slopes
+# Used in Paper
+valrt_intslope <- lmer(logrt ~ valenceE + (1 + valenceE| id),  data=rndtz)
+# mle3aaa 
+summary(valrt_intslope)
+confint(valrt_intslope)
+
+-0.16157 + 1.96*0.13
+
+```"

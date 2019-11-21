@@ -1,0 +1,2 @@
+"0","knitr::opts_chunk$set(echo = F, cache = T) "
+"0","# This command will cache all of our code chunks, which will help with run times as you make edits"

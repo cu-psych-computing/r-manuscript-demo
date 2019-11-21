@@ -1,0 +1,24 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1574342991932.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "D4B61BCC",
+    "lastKnownWriteTime" : 1574349075,
+    "last_content_update" : 1574349075857,
+    "path" : "~/Desktop/WorkSchool/Graduate School/Columbia PhD/Research Projects/R_Manuscript_Workshop_Fall2019/R_Manuscript_Workshop_ExampleScript.Rmd",
+    "project_path" : "R_Manuscript_Workshop_ExampleScript.Rmd",
+    "properties" : {
+        "cursorPosition" : "9,0",
+        "last_setup_crc32" : "66C65958bb338d19",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

@@ -1,0 +1,6 @@
+"0","dv1 <- kzregtable(model1)"
+"2","'tidy.matrix' is deprecated.
+See help(""Deprecated"")"
+"2","Error in `$<-.data.frame`(`*tmp*`, ""var"", value = ""m"") : 
+  replacement has 1 row, data has 0
+"

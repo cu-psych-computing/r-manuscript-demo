@@ -1,0 +1,63 @@
+"0","```r
+#Get Ranefs for congr
+#Add ID Column
+#Order by Ranef Size
+mathmod_intslope.ranef<-ranef(mathmod_intslope)$id
+mathmod_intslope.ranef$id <- as.numeric(row.names(mathmod_intslope.ranef))
+mathmod_intslope.ranef$congr <- mathmod_intslope.ranef$congr + fixef(mathmod_intslope)[2]
+
+ordmathmod_intslope.ranef <- mathmod_intslope.ranef[order(mathmod_intslope.ranef$congr), ]
+
+#Add Predicted Values to math dataset
+math$pred <- predict(mathmod_intslope)
+
+#Order math by Participant, Predicted congruence effect, and predicted logRT
+ordmath <- math[order(math$id, 
+                            math$congr, math$pred), ]
+
+
+# Math Priming Dotplot
+mathmod.quant <- as.vector(quantile(mathmod_intslope.ranef$congr, probs=c(.025, .975)))
+
+pdf(\"mathpriming_Dotplot_171021.pdf\", h = 4, w = 10)
+stripchart(mathmod_intslope.ranef$congr, pch=21, bg=\"skyblue\", cex=2.5, lwd=2,
+           xlim=c(-.027, 0), xlab=\"Math Priming Effect (logRT units)\", cex.axis=1.5, cex.lab=1.5)
+abline(v=c(mathmod.quant[1], summary(mathmod_intslope)$coeff[\"congr\", \"Estimate\"], mathmod.quant[2]), col = c(\"red\", \"black\", \"red\"), lty = c(\"dashed\", \"solid\", \"dashed\"),
+       lwd = 3)
+dev.off()
+
+
+# #This code is broken; I'm commenting it out
+# #Panel plots ordered by size of random effect
+# windows()
+# pdf(\"math-log-fitted-panels.pdf\", width = 10, height = 8)
+# par(mfrow=c(3,7))
+# for (i in ordmathmod2.ranef$subject) {
+#   plot(jitter(ordmath$congr[ordmath$subject==i], .35), 
+#        jitter(ordmath$logrt[ordmath$subject==i], .15),
+#        ylab=\"RT\", xlab=\"Congruence\",
+#        type=\"p\", pch=1, col=\"blue\", ylim=c(6.0, 7.0), xlim=c(-0.55, .55),
+#        main=paste(round(ordmathmod2.ranef$congr[ordmathmod2.ranef$subject==i], digits=2), sep = \" \"))
+#   lines(ordmath$congr[ordmath$subject==i], 
+#   ordmath$pred[ordmath$subject==i], lwd=5, col=\"red\")
+# }
+# dev.off()
+
+
+# Panel plots ordered by size of math priming random effect
+# For subset of IDs (with correct color scheme)
+pdf(file=\"mathpriming_panelplotbyranef_subIDs_171021.pdf\", width=7, height=10)
+par(mfrow=c(3,3))
+for (i in c(29, 41, 38, 1, 9, 11, 3, 23, 40)) {  
+  plot(jitter(ordmath$congr[ordmath$id==i], .1), ordmath$logrt[ordmath$id==i], 
+       ylab=\"Log RT\", col = \"blue\", xlab=\"Math Priming\", type=\"p\", cex = 1, pch=19, xlim=c(-.55, .55), ylim=c(5.5,7.25),  xaxt = 'n',
+       main=paste(round(mathmod_intslope.ranef$congr[mathmod_intslope.ranef$id==i], digits=2)))
+  axis(1, at=c(-.5,.5), labels=c(\"Incongruent\", \"Congruent\"))
+  lines(ordmath$congr[ordmath$id==i], 
+  ordmath$pred[ordmath$id==i], col = \"red\", lwd = 2) 
+
+}
+mtext(\"Log RT by Math Priming Effect, IDs Sorted by Size of Random Slope\n\", side=3, outer=TRUE, line=-1.2)
+dev.off()
+
+```"

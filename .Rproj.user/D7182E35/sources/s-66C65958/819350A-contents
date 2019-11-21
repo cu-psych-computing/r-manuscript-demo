@@ -1,0 +1,1048 @@
+---
+title: " "
+author: " "
+date: " "
+output:
+  pdf_document: default
+fontsize: 10pt
+geometry: margin=1in
+header-includes:
+- \usepackage{setspace}
+csl: apa-no-doi-no-issue.csl
+bibliography: librarytest2.bib
+classoption: landscape
+---
+
+```{r tablesetup, include=FALSE}
+knitr::opts_chunk$set(tidy = T, warning = F, message = F, results = "asis", echo = F) 
+```
+
+```{r echo=F, results = "hide", warning=FALSE, include = F, cache = F}
+
+# classoption: landscape
+
+
+library(dplyr)
+library(knitr)
+library(kableExtra)
+# https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html#column__row_specification
+
+roundto3 <- function(x) {
+  (ifelse(abs(x) < .01, 
+                 format(round(x, 3), nsmall = 3),
+                 format(round(x, 2), nsmall = 2)))
+}
+
+
+
+```
+
+
+### Table 1
+
+Regulatory Effectiveness of Support items
+
+```{r results = "asis", echo = F, warning=F, eval = T}
+
+table1_ress <- read.csv("RESS_table1_ress.csv")
+
+options(knitr.kable.NA = '')
+kable(dplyr::select(table1_ress, item_num, item), "latex", linesep = " ", booktabs = T, align = c("l", "l", "l"), col.names = c("Item No.", "Item")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) %>%
+  column_spec(1, width = "2em") %>%
+  column_spec(2, width = "40em") %>%
+    row_spec(5, hline_after=T) 
+
+
+```
+
+*Note.* T = Truth, C = Control. The same items were used in all studies.
+
+\newpage
+### Table 2
+
+Perceived Responsiveness items
+
+```{r results = "asis", echo = F}
+
+table2_ppr <- read.csv("RESS_table2_ppr.csv")
+
+options(knitr.kable.NA = '')
+kable(table2_ppr, "latex", linesep = " ", booktabs = T, align = c("l", "l", "l", "l", "l", "l"), col.names = c("Item No.", "Item", "Item No.", "Item", "Item No.", "Item")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) %>%
+  add_header_above(c("Study 1B" = 2, "Study 2" = 2, "Studies 3-7" = 2)) %>%
+  column_spec(1, width = "2em") %>%
+  column_spec(2, width = "15em") %>%
+    column_spec(3, width = "2em") %>%
+  column_spec(4, width = "15em") %>%
+    column_spec(5, width = "2em") %>%
+  column_spec(6, width = "15em") 
+
+```
+
+*Note.* Items used in Studies 1-2 were drawn from variations on perceived responsiveness items developed by Reis and colleagues (2018). Items used in Studies 3-7 were drawn from Maisel & Gable (2009). 
+
+\newpage
+
+### Table 3
+
+Correlations among variables, Study 2
+
+```{r results = "asis", echo = F, warnings = F,  include = T, message = F} 
+s2corrsum <- read.csv("s2corrsum.csv") %>% select(-SE)
+
+
+options(knitr.kable.NA = '')
+kable(s2corrsum, "latex", linesep = " ", booktabs = T, align = c("l", "c", "c", "c", "c")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10)
+```
+  *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self.
+  
+\newpage
+
+### Table 4
+
+Summary of results from Study 2, with unstandardized coefficients
+
+```{r results = "asis", echo = F}
+s2summary_table <- read.csv("ress_study2_results_bayes.csv") %>% 
+  mutate(N_Subj = as.character(N_Subj)) %>% 
+  mutate_if(is.numeric, funs(roundto3))
+
+options(knitr.kable.NA = '')
+kable(s2summary_table, "latex", linesep = " ", booktabs = T, align = c("l", "l", "c", "c", "c", "c", "c", "c", "c")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) %>%
+  row_spec(3, hline_after=T) %>%
+  row_spec(6, hline_after=T)  
+```
+
+ *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self. N_Subj = Number of subjects in analysis. Lower and Upper refer to 95% credibility intervals, and Lower90 and Upper90 refer to 90% credibility intervals. 
+ 
+ 
+\newpage
+
+### Table 5
+
+Summary of differences in effects of RES and PR, Study 2
+
+```{r results = "asis", echo = F}
+s2diffsummary <- read.csv("s2diffsummary.csv") %>% mutate_if(is.numeric, funs(roundto3))
+
+options(knitr.kable.NA = '')
+kable(s2diffsummary, "latex", linesep = " ", booktabs = T, align = c("l", "c", "c", "c", "c", "c", "c"), col.names = c("DV", "RES-PR", "SE", "Lower", "Upper", "Lower90", "Upper90")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) 
+```
+
+ *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self. Lower and Upper refer to 95% credibility intervals, and Lower90 and Upper90 refer to 90% credibility intervals. 
+ 
+ 
+\newpage
+
+### Table 6
+
+Within-person reliability, between-person reliability, and reliability of change, Studies 3-5
+
+```{r results = "asis", echo = F, warnings = F,  include = T, message = F} 
+s3rels <- read.csv("ress_s3_reliabilities.csv")
+s4rels <- read.csv("ress_s4_reliabilities.csv")
+s5rels <- read.csv("ress_s5_reliabilities.csv")
+
+diaryrels1 <- full_join(s3rels, s4rels, by = c("Variable", "Reliability"))
+diaryrels <- full_join(diaryrels1, s5rels, by = c("Variable", "Reliability"))
+
+
+options(knitr.kable.NA = '-')
+kable(diaryrels, "latex", linesep = " ", booktabs = T, align = c("l", "l", "c", "c", 
+                                                                  "c"),
+      col.names = c("Variable", "Reliability", "Study 3", "Study 4", 
+                              "Study 5")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) %>%
+  row_spec(3, hline_after=T) %>%
+  row_spec(6, hline_after=T) %>%
+  row_spec(9, hline_after=T) %>%
+  row_spec(12, hline_after=T) %>%
+  row_spec(15, hline_after=T) %>% 
+  row_spec(18, hline_after=T) 
+```
+ *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. Sup. Eff. = Support Effectiveness. 
+
+\newpage
+
+### Table 7A
+
+Within-person correlations among variables, Studies 3-5
+
+```{r results = "asis", echo = F, warnings = F,  include = T, message = F} 
+s3corrsum_within <- read.csv("s3corrsum_within.csv") %>% select(-SE)
+s4corrsum_within <- read.csv("s4corrsum_within.csv") %>% select(-SE)
+s5corrsum_within <- read.csv("s5corrsum_within.csv") 
+
+diarycorr_within1 <- full_join(s3corrsum_within, s4corrsum_within, by = "Variables")
+diarycorr_within2 <- full_join(diarycorr_within1, s5corrsum_within, by = "Variables")
+
+diarycorr_within2$order <- 
+  dplyr::recode(diarycorr_within2$Variables,
+         "RES, PR" = 1,
+         "RES, Sup. Eff." = 2, 
+         "RES, Neg. Mood" = 3,          
+         "RES, Pos. Mood" = 4, 
+         "RES, IOS" = 6, 
+         "RES, Coping" = 5, 
+         "RES, Sleep Quality" = 7, 
+         "RES, Task Motivation" = 8, 
+         "RES, Task Performance" = 9, 
+
+         
+         "PR, Sup. Eff." = 10, 
+         "PR, Neg. Mood" = 11,          
+         "PR, Pos. Mood" = 12, 
+          "PR, IOS" = 14, 
+         "PR, Coping" = 13, 
+         "PR, Sleep Quality" = 15, 
+         "PR, Task Motivation" = 16, 
+         "PR, Task Performance" = 17, 
+
+         "Sup. Eff., Neg. Mood" = 18,          
+         "Sup. Eff., Pos. Mood" = 19, 
+         "Sup. Eff., IOS" = 21, 
+         "Sup. Eff., Coping" = 20, 
+         "Sup. Eff., Sleep Quality" = 22, 
+         "Sup. Eff., Task Motivation" = 23, 
+         "Sup. Eff., Task Performance" = 24, 
+
+         "Neg. Mood, Pos. Mood" = 25, 
+         "Neg. Mood, IOS" = 27, 
+         "Neg. Mood, Coping" = 26, 
+         "Neg. Mood, Sleep Quality" = 28, 
+         "Neg. Mood, Task Motivation" = 29, 
+         "Neg. Mood, Task Performance" = 30, 
+
+         "Pos. Mood, IOS" = 32, 
+         "Pos. Mood, Coping" = 31, 
+         "Pos. Mood, Sleep Quality" = 33, 
+         "Pos. Mood, Task Motivation" = 34, 
+         "Pos. Mood, Task Performance" = 35, 
+
+         "Coping, IOS" = 36, 
+         "IOS, Sleep Quality" = 40, 
+         "IOS, Task Motivation" = 41, 
+         "IOS, Task Performance" = 42, 
+
+         "Coping, Sleep Quality" = 37,
+         "Coping, Task Motivation" = 38, 
+         "Coping, Task Performance" = 39, 
+         
+          "Sleep Quality, Task Motivation" = 43, 
+         "Sleep Quality, Task Performance" = 44, 
+
+        "Task Motivation, Task Anticipated Performance" = 45
+
+
+
+         )
+
+
+
+
+
+diarycorr_within2_0 <- arrange(diarycorr_within2, order) %>% select(-order, -SE)
+
+
+```
+
+```{r results = "asis", echo = F, warnings = F, include = T, message = F} 
+
+diarycorr_within2a <- diarycorr_within2_0[1:24, ]
+row.names(diarycorr_within2a) <- c()
+
+options(knitr.kable.NA = '-')
+kable(diarycorr_within2a, "latex", linesep = " ", booktabs = T, align = c("l", "c", "c", "c", 
+                                                                  "c", "c", "c",
+                                                                  "c", "c", "c", "c"),
+      col.names = c("Variables", "Estimate", "Lower", "Upper", 
+                              "Estimate", "Lower", "Upper",
+                              "Estimate", "Lower", "Upper")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) %>% 
+  add_header_above(c(" " = 1, "Study 3" = 3, "Study 4" = 3, "Study 5" = 3))
+```
+*Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self. Sup. Eff. = Support Effectiveness.  
+
+\newpage
+
+
+### Table 7B
+
+Within-person correlations among variables, Studies 3-5, continued
+```{r results = "asis", echo = F, warnings = F,  include = T, message = F} 
+diarycorr_within2b <- diarycorr_within2_0[25:45,]
+row.names(diarycorr_within2b) <- c()
+
+options(knitr.kable.NA = '-')
+kable(diarycorr_within2b, "latex", linesep = " ", booktabs = T, align = c("l", "c", "c", "c", 
+                                                                  "c", "c", "c",
+                                                                  "c", "c", "c"),
+      col.names = c("Variables", "Estimate", "Lower", "Upper", 
+                              "Estimate", "Lower", "Upper",
+                              "Estimate", "Lower", "Upper")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) %>% 
+  add_header_above(c(" " = 1, "Study 3" = 3, "Study 4" = 3, "Study 5" = 3))
+```
+  *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self. Sup. Eff. = Support Effectiveness. 
+
+\newpage 
+
+### Table 8A
+
+Between-person correlations among variables, Studies 3-5
+```{r results = "asis", echo = F, warnings = F,  include = T, message = F} 
+s3corrsum_between <- read.csv("s3corrsum_between.csv") %>% select(-SE)
+s4corrsum_between <- read.csv("s4corrsum_between.csv") %>% select(-SE)
+s5corrsum_between <- read.csv("s5corrsum_between.csv") %>% select(-SE)
+
+diarycorr1 <- full_join(s3corrsum_between, s4corrsum_between, by = "Variables")
+diarycorr2 <- full_join(diarycorr1, s5corrsum_between, by = "Variables")
+
+diarycorr2$order <- 
+  dplyr::recode(diarycorr2$Variables,
+         "RES, PR" = 1,
+         "RES, Sup. Eff." = 2, 
+         "RES, Neg. Mood" = 3,          
+         "RES, Pos. Mood" = 4, 
+         "RES, IOS" = 6, 
+         "RES, Coping" = 5, 
+         "RES, Sleep Quality" = 7, 
+         "RES, Task Motivation" = 8, 
+         "RES, Task Performance" = 9, 
+
+         
+         "PR, Sup. Eff." = 10, 
+         "PR, Neg. Mood" = 11,          
+         "PR, Pos. Mood" = 12, 
+          "PR, IOS" = 14, 
+         "PR, Coping" = 13, 
+         "PR, Sleep Quality" = 15, 
+         "PR, Task Motivation" = 16, 
+         "PR, Task Performance" = 17, 
+
+         "Sup. Eff., Neg. Mood" = 18,          
+         "Sup. Eff., Pos. Mood" = 19, 
+         "Sup. Eff., IOS" = 21, 
+         "Sup. Eff., Coping" = 20, 
+         "Sup. Eff., Sleep Quality" = 22, 
+         "Sup. Eff., Task Motivation" = 23, 
+         "Sup. Eff., Task Performance" = 24, 
+
+         "Neg. Mood, Pos. Mood" = 25, 
+         "Neg. Mood, IOS" = 27, 
+         "Neg. Mood, Coping" = 26, 
+         "Neg. Mood, Sleep Quality" = 28, 
+         "Neg. Mood, Task Motivation" = 29, 
+         "Neg. Mood, Task Performance" = 30, 
+
+         "Pos. Mood, IOS" = 32, 
+         "Pos. Mood, Coping" = 31, 
+         "Pos. Mood, Sleep Quality" = 33, 
+         "Pos. Mood, Task Motivation" = 34, 
+         "Pos. Mood, Task Performance" = 35, 
+
+         "Coping, IOS" = 36, 
+         "IOS, Sleep Quality" = 40, 
+         "IOS, Task Motivation" = 41, 
+         "IOS, Task Performance" = 42, 
+
+         "Coping, Sleep Quality" = 37,
+         "Coping, Task Motivation" = 38, 
+         "Coping, Task Performance" = 39, 
+         
+          "Sleep Quality, Task Motivation" = 43, 
+         "Sleep Quality, Task Performance" = 44, 
+
+        "Task Motivation, Task Anticipated Performance" = 45
+
+
+
+         )
+
+
+
+
+
+diarycorr2 <- arrange(diarycorr2, order) %>% select(-order)
+
+
+```
+
+```{r results = "asis", echo = F, warnings = F,  include = T, message = F} 
+diarycorr2a <- diarycorr2[1:24,]
+row.names(diarycorr2a) <- c()
+
+options(knitr.kable.NA = '-')
+kable(diarycorr2a, "latex", linesep = " ", booktabs = T, align = c("l", "c", "c", "c", 
+                                                                  "c", "c", "c",
+                                                                  "c", "c", "c"),
+      col.names = c("Variables", "Estimate", "Lower", "Upper", 
+                              "Estimate", "Lower", "Upper",
+                              "Estimate", "Lower", "Upper")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) %>% 
+  add_header_above(c(" " = 1, "Study 3" = 3, "Study 4" = 3, "Study 5" = 3))
+```
+  *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self. Sup. Eff. = Support Effectiveness. 
+
+
+\newpage
+
+### Table 8B
+
+Between-person correlations among variables, Studies 3-5, continued
+```{r results = "asis", echo = F, warnings = F,  include = T, message = F} 
+diarycorr2b <- diarycorr2[25:45,]
+row.names(diarycorr2b) <- c()
+
+options(knitr.kable.NA = '-')
+kable(diarycorr2b, "latex", linesep = " ", booktabs = T, align = c("l", "c", "c", "c", 
+                                                                  "c", "c", "c",
+                                                                  "c", "c", "c"),
+      col.names = c("Variables", "Estimate", "Lower", "Upper", 
+                              "Estimate", "Lower", "Upper",
+                              "Estimate", "Lower", "Upper")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) %>% 
+  add_header_above(c(" " = 1, "Study 3" = 3, "Study 4" = 3, "Study 5" = 3))
+```
+  *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self. Sup. Eff. = Support Effectiveness. 
+
+
+\newpage
+
+
+ 
+### Table 9
+
+Summary of results from Study 3, with unstandardized coefficients
+
+```{r results = "asis", echo = F}
+s3summary_table <- read.csv("ress_study3_results_bayes.csv") %>% 
+  mutate(N_Subj = as.character(N_Subj), N_Obs = as.character(N_Obs)) %>% 
+  mutate_if(is.numeric, funs(roundto3))
+
+options(knitr.kable.NA = '')
+kable(s3summary_table, "latex", linesep = " ", booktabs = T, align = c("l", "l", "c", "c", "c", "c", "c", "c", "c", "c")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) %>%
+  row_spec(6, hline_after=T) %>%
+  row_spec(12, hline_after=T)  %>%
+  row_spec(18, hline_after=T) %>% 
+  row_spec(24, hline_after=T) 
+```
+
+ *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self. N_Subj = Number of subjects in analysis. N_Obs = Number of observations used in analysis. Lower and Upper refer to 95% credibility intervals, and Lower90 and Upper90 refer to 90% credibility intervals. 
+
+
+\newpage
+
+### Table 10
+
+Summary of differences in within-person effects of RES and PR, Study 3
+
+```{r results = "asis", echo = F}
+s3diffsummary_wc <- read.csv("s3diffsummary_wc.csv") %>% mutate_if(is.numeric, funs(roundto3))
+
+options(knitr.kable.NA = '')
+kable(s3diffsummary_wc, "latex", linesep = " ", booktabs = T, align = c("l", "c", "c", "c", "c", "c", "c"), col.names = c("DV", "RES-PR", "SE", "Lower", "Upper", "Lower90", "Upper90")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) 
+```
+
+ *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self. Lower and Upper refer to 95% credibility intervals, and Lower90 and Upper90 refer to 90% credibility intervals. 
+ 
+\newpage
+
+### Table 11
+
+Summary of differences in between-person effects of RES and PR, Study 3
+
+```{r results = "asis", echo = F}
+s3diffsummary_bc <- read.csv("s3diffsummary_bc.csv") %>% mutate_if(is.numeric, funs(roundto3))
+
+options(knitr.kable.NA = '')
+kable(s3diffsummary_bc, "latex", linesep = " ", booktabs = T, align = c("l", "c", "c", "c", "c", "c", "c"), col.names = c("DV", "RES-PR", "SE", "Lower", "Upper", "Lower90", "Upper90")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) 
+```
+
+ *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self. Lower and Upper refer to 95% credibility intervals, and Lower90 and Upper90 refer to 90% credibility intervals. 
+ 
+  
+\newpage
+
+### Table 12A
+
+Summary of random effects, Study 3
+
+
+```{r}
+s3ranefsummary <- read.csv("s3ranefsummary.csv") %>% mutate_if(is.numeric, funs(roundto3))
+
+kable(s3ranefsummary[1:24, ], "latex", linesep = " ", booktabs = T, align = c("l", "l", "c", "c", "c", "c", "c", "c"), col.names = c("DV", "Term", "Estimate", "SE", "Lower", "Upper", "Lower90", "Upper90")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) %>%
+  row_spec(8, hline_after=T) %>%
+  row_spec(16, hline_after=T)  
+
+```
+  *Note.*  RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of the other in the self. SD = standard deviation. Cor = correlation. 
+
+ 
+\newpage
+
+### Table 12B
+
+Summary of random effects, Study 3, continued
+
+```{r}
+
+s3ranefsummary2 <- s3ranefsummary[25:40, ]
+rownames(s3ranefsummary2) <- c()
+kable(s3ranefsummary2, "latex", linesep = " ", booktabs = T, align = c("l", "l", "c", "c", "c", "c", "c", "c"), col.names = c("DV", "Term", "Estimate", "SE", "Lower", "Upper", "Lower90", "Upper90")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) %>%
+  row_spec(8, hline_after=T) 
+
+```
+  *Note.*  RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of the other in the self. SD = standard deviation. Cor = correlation. 
+
+\newpage
+
+### Table 13A
+Summary of results from Study 4, with unstandardized coefficients
+```{r results = "asis", echo = F}
+
+s4summary_table <- read.csv("ress_study4_results_bayes.csv") %>% 
+  mutate(N_Subj = as.character(N_Subj), N_Obs = as.character(N_Obs)) %>% 
+  mutate_if(is.numeric, funs(roundto3))
+
+options(knitr.kable.NA = '')
+kable(s4summary_table[1:18, ], "latex", linesep = " ", booktabs = T, align = c("l", "l", "c", "c", "c", "c", "c", "c", "c", "c")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) %>%
+  row_spec(6, hline_after=T) %>%
+  row_spec(12, hline_after=T)  
+
+```
+
+ *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self. N_Subj = Number of subjects in analysis. N_Obs = Number of observations used in analysis. Lower and Upper refer to 95% credibility intervals, and Lower90 and Upper90 refer to 90% credibility intervals. 
+
+
+\newpage
+
+### Table 13B
+Summary of results from Study 4, with unstandardized coefficients, continued
+```{r results = "asis", echo = F}
+s4summary_table2 <- s4summary_table[19:37, ]
+rownames(s4summary_table2) <- c()
+
+options(knitr.kable.NA = '')
+kable(s4summary_table2, "latex", linesep = " ", booktabs = T, align = c("l", "l", "c", "c", "c", "c", "c", "c", "c", "c")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) %>%
+  row_spec(6, hline_after=T) %>%
+  row_spec(12, hline_after=T)  
+
+```
+
+ *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self. N_Subj = Number of subjects in analysis. N_Obs = Number of observations used in analysis. Lower and Upper refer to 95% credibility intervals, and Lower90 and Upper90 refer to 90% credibility intervals. 
+
+
+\newpage
+
+### Table 14
+
+Summary of differences in within-person effects of RES and PR, Study 4
+
+```{r results = "asis", echo = F}
+s4diffsummary_wc <- read.csv("s4diffsummary_wc.csv") %>% mutate_if(is.numeric, funs(roundto3))
+
+options(knitr.kable.NA = '')
+kable(s4diffsummary_wc, "latex", linesep = " ", booktabs = T, align = c("l", "c", "c", "c", "c", "c", "c"), col.names = c("DV", "RES-PR", "SE", "Lower", "Upper", "Lower90", "Upper90")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) 
+```
+
+ *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self. Lower and Upper refer to 95% credibility intervals, and Lower90 and Upper90 refer to 90% credibility intervals. 
+ 
+\newpage
+
+### Table 15
+
+Summary of differences in between-person effects of RES and PR, Study 4
+
+```{r results = "asis", echo = F}
+s4diffsummary_bc <- read.csv("s4diffsummary_bc.csv") %>% mutate_if(is.numeric, funs(roundto3))
+
+options(knitr.kable.NA = '')
+kable(s4diffsummary_bc, "latex", linesep = " ", booktabs = T, align = c("l", "c", "c", "c", "c", "c", "c"), col.names = c("DV", "RES-PR", "SE", "Lower", "Upper", "Lower90", "Upper90")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) 
+```
+
+ *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self. Lower and Upper refer to 95% credibility intervals, and Lower90 and Upper90 refer to 90% credibility intervals. 
+ 
+ 
+ 
+\newpage
+
+### Table 16A 
+
+Summary of random effects, Study 4
+
+```{r}
+s4ranefsummary <- read.csv("s4ranefsummary.csv") %>% mutate_if(is.numeric, funs(roundto3))
+
+kable(s4ranefsummary[1:24,], "latex", linesep = " ", booktabs = T, align = c("l", "l", "c", "c", "c", "c", "c", "c"), col.names = c("DV", "Term", "Estimate", "SE", "Lower", "Upper", "Lower90", "Upper90")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) %>%
+  row_spec(8, hline_after=T) %>%
+  row_spec(16, hline_after=T)  
+```
+  *Note.*  RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of the other in the self. SD = standard deviation. Cor = correlation. 
+
+
+
+\newpage
+
+### Table 16B 
+
+Summary of random effects, Study 4, continued
+
+```{r}
+s4ranefsummary2 <- s4ranefsummary[25:48, ]
+rownames(s4ranefsummary2) <- c()
+
+kable(s4ranefsummary2, "latex", linesep = " ", booktabs = T, align = c("l", "l", "c", "c", "c", "c", "c", "c"), col.names = c("DV", "Term", "Estimate", "SE", "Lower", "Upper", "Lower90", "Upper90")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) %>%
+  row_spec(8, hline_after=T) %>%
+  row_spec(16, hline_after=T)  
+```
+  *Note.*  RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of the other in the self. SD = standard deviation. Cor = correlation. 
+
+
+
+\newpage
+
+### Table 17A
+
+Summary of results from Study 5, with unstandardized coefficients
+
+```{r results = "asis", echo = F}
+
+s5summary_table <- read.csv("ress_study5_results_bayes.csv") %>% 
+    mutate(N_Subj = as.character(N_Subj), N_Obs = as.character(N_Obs)) %>% 
+  mutate_if(is.numeric, funs(roundto3))
+
+options(knitr.kable.NA = '')
+kable(s5summary_table[1:24, ], "latex", linesep = " ", booktabs = T, align = c("l", "l", "c", "c", "c", "c", "c", "c", "c", "c")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) %>%
+  row_spec(6, hline_after=T) %>%
+  row_spec(12, hline_after=T)  %>%
+  row_spec(18, hline_after=T) 
+
+```
+
+ *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self. N_Subj = Number of subjects in analysis. N_Obs = Number of observations used in analysis. Lower and Upper refer to 95% credibility intervals, and Lower90 and Upper90 refer to 90% credibility intervals. 
+
+
+\newpage
+
+### Table 17B
+
+Summary of results from Study 5, with unstandardized coefficients, continued
+
+```{r results = "asis", echo = F}
+
+s5summary_table2 <- s5summary_table[25:49,]
+rownames(s5summary_table2) <- c()
+
+options(knitr.kable.NA = '')
+kable(s5summary_table2, "latex", linesep = " ", booktabs = T, align = c("l", "l", "c", "c", "c", "c", "c", "c", "c", "c")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) %>%
+  row_spec(6, hline_after=T) %>%
+  row_spec(13, hline_after=T)  %>%
+  row_spec(19, hline_after=T) 
+
+```
+
+ *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self. N_Subj = Number of subjects in analysis. N_Obs = Number of observations used in analysis. Lower and Upper refer to 95% credibility intervals, and Lower90 and Upper90 refer to 90% credibility intervals. 
+
+
+\newpage
+
+### Table 18
+
+Summary of differences in within-person effects of RES and PR, Study 5
+
+```{r results = "asis", echo = F}
+s5diffsummary_wc <- read.csv("s5diffsummary_wc.csv") %>% mutate_if(is.numeric, funs(roundto3))
+
+options(knitr.kable.NA = '')
+kable(s5diffsummary_wc, "latex", linesep = " ", booktabs = T, align = c("l", "c", "c", "c", "c", "c", "c"), col.names = c("DV", "RES-PR", "SE", "Lower", "Upper", "Lower90", "Upper90")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) 
+```
+
+ *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self. Lower and Upper refer to 95% credibility intervals, and Lower90 and Upper90 refer to 90% credibility intervals. 
+ 
+\newpage
+
+### Table 19
+
+Summary of differences in between-person effects of RES and PR, Study 5
+
+```{r results = "asis", echo = F}
+s5diffsummary_bc <- read.csv("s5diffsummary_bc.csv") %>% mutate_if(is.numeric, funs(roundto3))
+
+options(knitr.kable.NA = '')
+kable(s5diffsummary_bc, "latex", linesep = " ", booktabs = T, align = c("l", "c", "c", "c", "c", "c", "c"), col.names = c("DV", "RES-PR", "SE", "Lower", "Upper", "Lower90", "Upper90")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) 
+```
+
+ *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self. Lower and Upper refer to 95% credibility intervals, and Lower90 and Upper90 refer to 90% credibility intervals. 
+
+
+\newpage
+
+### Table 20A 
+
+Summary of random effects, Study 5
+
+```{r}
+s5ranefsummary <- read.csv("s5ranefsummary.csv") %>% mutate_if(is.numeric, funs(roundto3))
+
+kable(s5ranefsummary[1:24, ], "latex", linesep = " ", booktabs = T, align = c("l", "l", "c", "c", "c", "c", "c", "c")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) %>%
+  row_spec(8, hline_after=T) %>%
+  row_spec(16, hline_after=T) 
+
+
+
+```
+  *Note.*  RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of the other in the self. SD = standard deviation. Cor = correlation. 
+
+
+\newpage
+
+### Table 20B 
+
+Summary of random effects, Study 5, continued
+
+```{r}
+s5ranefsummary2 <- s5ranefsummary[25:48, ]
+rownames(s5ranefsummary2) <- c()
+
+kable(s5ranefsummary2, "latex", linesep = " ", booktabs = T, align = c("l", "l", "c", "c", "c", "c", "c", "c")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) %>%
+  row_spec(8, hline_after=T) %>%
+  row_spec(16, hline_after=T)  
+```
+  *Note.*  RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of the other in the self. SD = standard deviation. Cor = correlation. 
+
+
+\newpage
+
+### Table 20C 
+
+Summary of random effects, Study 5, continued
+
+```{r}
+s5ranefsummary3 <- s5ranefsummary[49:64, ]
+rownames(s5ranefsummary3) <- c()
+
+kable(s5ranefsummary3, "latex", linesep = " ", booktabs = T, align = c("l", "l", "c", "c", "c", "c", "c", "c")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) %>%
+  row_spec(8, hline_after=T) 
+```
+  *Note.*  RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of the other in the self. SD = standard deviation. Cor = correlation. 
+
+
+\newpage
+
+
+### Table 21A
+
+Correlations among variables, Study 6
+
+```{r results = "asis", echo = F, warnings = F,  include = T, message = F} 
+s6corrsum <- read.csv("s6corrsum.csv") %>% select(-SE)
+
+options(knitr.kable.NA = '')
+kable(s6corrsum[1:21, ], "latex", linesep = " ", booktabs = T, align = c("l", "c", "c", "c", "c")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10)
+
+
+#   cat('\\begin{center}')
+#     # `{c c}` Creates a two column table
+#     # Use `{c | c}` if you'd like a line between the tables
+#     cat('\\begin{tabular}{ c c }')
+#     print(t1)
+#     # Separate the two columns with an `&`
+#     cat(' ')
+#     print(t2)
+#     cat('\\end{tabular}')
+#     cat('\\end{center}')
+
+ 
+ 
+```
+  *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self.
+  
+\newpage
+
+### Table 21B
+
+Correlations among variables, Study 6, continued
+
+```{r results = "asis", echo = F, warnings = F,  include = T, message = F} 
+s6corrsum2 <- s6corrsum[22:36, ]
+rownames(s6corrsum2) <- c()
+options(knitr.kable.NA = '')
+kable(s6corrsum2, "latex", linesep = " ", booktabs = T, align = c("l", "c", "c", "c", "c")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10)
+
+```
+  *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self.
+
+\newpage
+
+### Table 22
+
+Summary of results from Study 6, with unstandardized coefficients
+
+```{r results = "asis", echo = F}
+s6summary_table <- read.csv("ress_study6_results_bayes.csv") %>% 
+    mutate(N_Subj = as.character(N_Subj), N_Obs = as.character(N_Obs)) %>% 
+  mutate_if(is.numeric, funs(roundto3))
+
+options(knitr.kable.NA = '')
+kable(s6summary_table, "latex", linesep = " ", booktabs = T, align = c("l", "l", "c", "c", "c", "c", "c", "c", "c")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) %>%
+  row_spec(3, hline_after=T) %>%
+  row_spec(7, hline_after=T)  %>% 
+  row_spec(11, hline_after=T)  %>% 
+  row_spec(14, hline_after=T) 
+
+```
+
+ *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self. N_Subj = Number of subjects (dyads) in analysis. N_Obs = Number of observations in analysis. Lower and Upper refer to 95% credibility intervals, and Lower90 and Upper90 refer to 90% credibility intervals. 
+ 
+ 
+\newpage
+
+
+### Table 23
+
+Summary of differences in effects of RES and PR, Study 6
+
+```{r results = "asis", echo = F}
+s6diffsummary <- read.csv("s6diffsummary.csv") %>% mutate_if(is.numeric, funs(roundto3))
+
+options(knitr.kable.NA = '')
+kable(s6diffsummary, "latex", linesep = " ", booktabs = T, align = c("l", "c", "c", "c", "c", "c", "c"), col.names = c("DV", "RES-PR", "SE", "Lower", "Upper", "Lower90", "Upper90")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) 
+```
+
+ *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self. Lower and Upper refer to 95% credibility intervals, and Lower90 and Upper90 refer to 90% credibility intervals. 
+ 
+ 
+\newpage
+
+### Table 24
+
+Summary of results using coder-rated RES and PR, Study 6, with unstandardized coefficients
+
+```{r results = "asis", echo = F}
+s6vcsummary_table <- read.csv("ress_study6_vc_results_bayes.csv") %>% 
+    mutate(N_Subj = as.character(N_Subj), N_Obs = as.character(N_Obs)) %>% 
+  mutate_if(is.numeric, funs(roundto3))
+
+
+options(knitr.kable.NA = '')
+kable(s6vcsummary_table, "latex", linesep = " ", booktabs = T, align = c("l", "l", "c", "c", "c", "c", "c", "c", "c")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) %>%
+  row_spec(3, hline_after=T) %>%
+  row_spec(7, hline_after=T)  %>% 
+  row_spec(11, hline_after=T)  %>% 
+  row_spec(14, hline_after=T) 
+
+```
+
+ *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self. N_Subj = Number of subjects (dyads) in analysis. N_Obs = Number of observations in analysis. Lower and Upper refer to 95% credibility intervals, and Lower90 and Upper90 refer to 90% credibility intervals. 
+ 
+ 
+\newpage
+
+
+### Table 25
+
+Summary of differences in effects of coder-rated RES and coder-rated PR, Study 6
+
+```{r results = "asis", echo = F}
+s6vcdiffsummary <- read.csv("s6vcdiffsummary.csv") %>% mutate_if(is.numeric, funs(roundto3))
+
+options(knitr.kable.NA = '')
+kable(s6vcdiffsummary, "latex", linesep = " ", booktabs = T, align = c("l", "c", "c", "c", "c", "c", "c"), col.names = c("DV", "RES-PR", "SE", "Lower", "Upper", "Lower90", "Upper90")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) 
+```
+
+ *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self. Lower and Upper refer to 95% credibility intervals, and Lower90 and Upper90 refer to 90% credibility intervals. 
+ 
+ 
+\newpage
+
+### Table 26A
+
+Correlations among variables, Study 7
+
+```{r results = "asis", echo = F, warnings = F,  include = T, message = F} 
+s7corrsum <- read.csv("s7corrsum.csv") %>% select(-SE)
+
+options(knitr.kable.NA = '')
+kable(s7corrsum[1:24, ], "latex", linesep = " ", booktabs = T, align = c("l", "c", "c", "c", "c")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10)
+```
+  *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self.
+  
+\newpage
+
+### Table 26B
+
+Correlations among variables, Study 7, continued
+
+```{r results = "asis", echo = F, warnings = F,  include = T, message = F} 
+s7corrsum2 <- s7corrsum[25:45, ]
+rownames(s7corrsum2) <- c()
+options(knitr.kable.NA = '')
+kable(s7corrsum2, "latex", linesep = " ", booktabs = T, align = c("l", "c", "c", "c", "c")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10)
+```
+  *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self.
+  
+\newpage
+
+
+### Table 27
+
+Summary of results from Study 7, with unstandardized coefficients
+
+```{r results = "asis", echo = F}
+s7summary_table <- read.csv("ress_study7_results_bayes.csv") %>% 
+    mutate(N_Subj = as.character(N_Subj), N_Obs = as.character(N_Obs)) %>% 
+  mutate_if(is.numeric, funs(roundto3)) %>% select(-N_Obs)
+
+options(knitr.kable.NA = '')
+kable(s7summary_table, "latex", linesep = " ", booktabs = T, align = c("l", "l", "c", "c", "c", "c", "c", "c", "c")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) %>%
+  row_spec(3, hline_after=T) %>%
+  row_spec(7, hline_after=T)  %>% 
+  row_spec(11, hline_after=T)  %>% 
+  row_spec(14, hline_after=T) %>% 
+  row_spec(18, hline_after=T) %>% 
+  row_spec(22, hline_after=T) %>% 
+  row_spec(25, hline_after=T) 
+
+```
+
+ *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self. N_Subj = Number of subjects (dyads) in analysis. N_Obs = Number of observations in analysis. Lower and Upper refer to 95% credibility intervals, and Lower90 and Upper90 refer to 90% credibility intervals. 
+ 
+ 
+\newpage
+
+
+### Table 28
+
+Summary of differences in effects of RES and PR, Study 7
+
+```{r results = "asis", echo = F}
+s7diffsummary <- read.csv("s7diffsummary.csv") %>% mutate_if(is.numeric, funs(roundto3))
+
+options(knitr.kable.NA = '')
+kable(s7diffsummary, "latex", linesep = " ", booktabs = T, align = c("l", "c", "c", "c", "c", "c", "c"), col.names = c("DV", "RES-PR", "SE", "Lower", "Upper", "Lower90", "Upper90")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) 
+```
+
+ *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. IOS = Inclusion of Other in the Self. Lower and Upper refer to 95% credibility intervals, and Lower90 and Upper90 refer to 90% credibility intervals. 
+ 
+ 
+\newpage
+
+### Table 29
+
+Summary of results for cardiovascular data, Study 7
+```{r results = "asis", echo = F}
+
+s7physchange_summary <- read.csv("s7physchange_summary.csv") %>% 
+  mutate(N_Subj = as.character(N_Subj), N_Obs = as.character(N_Obs)) %>% 
+  mutate_if(is.numeric, funs(roundto3)) %>% select(-DV)
+  
+  
+options(knitr.kable.NA = '')
+kable(s7physchange_summary, "latex", linesep = " ", booktabs = T, align = c("l", "c", "c", "c", "c", "c", "c", "c", "c")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) %>% 
+    row_spec(8, bold = TRUE) 
+
+
+
+```
+ *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. For contrasts, Speech is coded as 0, otherwise 1. 
+
+
+
+\newpage
+
+
+
+### Table 30
+
+Summary of random effects for cardiovascular data, Study 7
+
+```{r results = "asis", echo = F}
+s7physranef <- read.csv("s7physranef.csv") %>% mutate_if(is.numeric, funs(roundto3)) %>% select(-DV)
+
+
+kable(s7physranef, "latex", linesep = " ", booktabs = T, align = c("l", "c", "c", "c", "c", "c", "c")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) 
+
+
+
+```
+ *Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. For contrasts, Speech is coded as 0, and the comparison phase is coded as 1. 
+ 
+\newpage
+
+### Table 31
+
+Summary of meta-analysis results, fixed effects
+
+```{r}
+ress_metaall_summary <- read.csv("ress_metaall_summary.csv") %>% 
+  mutate(N_Obs = as.character(N_Obs)) %>% 
+  mutate_if(is.numeric, funs(roundto3))
+
+options(knitr.kable.NA = '')
+kable(ress_metaall_summary, "latex", linesep = " ", booktabs = T, align = c("l", "l", "c", "c", "c", "c")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) %>% 
+    row_spec(3, hline_after=T) %>%
+    row_spec(6, hline_after=T)
+
+
+
+```
+
+
+*Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. RES-PR = difference of RES and PR (RES minus PR). Relational Variable is coded as 1 = relational variable, 0 = non-relational variable (self-regulation relevant variable). Level of Analysis is coded as 1 = within-person effect, 0 = between-person effect.
+
+\newpage
+
+### Table 32
+
+Summary of meta-analysis results, random effects
+
+```{r}
+meta_ranef_table <- read.csv("ress_meta_ranef_table.csv") 
+options(knitr.kable.NA = '')
+kable(meta_ranef_table, "latex", linesep = " ", booktabs = T, align = c("l", "l", "c", "c", "c", "c",
+                                                                        "c", "c", "c")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) %>% 
+    row_spec(4, hline_after=T) %>%
+    row_spec(8, hline_after=T)
+
+
+```
+
+*Note.* RES = Regulatory Effectiveness of Support. PR = Perceived Responsiveness. RES-PR = difference of RES and PR (RES minus PR). Relational Variable is coded as 1 = relational variable, 0 = non-relational variable (self-regulation relevant variable). SD = standard deviation. 

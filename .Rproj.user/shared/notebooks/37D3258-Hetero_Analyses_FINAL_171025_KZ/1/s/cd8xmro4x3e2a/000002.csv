@@ -1,0 +1,21 @@
+"0","```r
+############################################################################################
+#Trait_Vale Random Effects for Time 1 and Time 2
+############################################################################################
+
+#### With Effect Coding
+windows()
+par(mfrow=c(2,1)) 
+stripchart(ranefboth$t1_valenceE, pch=21, bg=\"skyblue\", cex=3.5, lwd=2,
+           xlim=c(-.6, .25), xlab=\"Trait Valence Effect: Time 1\", cex.axis=1.5, cex.lab=1.5)
+#abline(v=c(-.146), lwd=5, col=\"skyblue\")
+#mtext(\"-0.25\", 1, line=2.7, adj=.48, cex=2)
+#mtext(\"Average\", 3, line=.5, adj=.48, cex=2)
+
+stripchart(ranefboth$t2_valenceE, pch=21, bg=\"skyblue\", cex=3.5, lwd=2, xlim=c(-.6, .25),
+           xlab=\"Trait Valence Effect: Time 2\", cex.axis=1.5, cex.lab=1.5)
+#abline(v=c(-.254), lwd=5, col=\"skyblue\")
+#mtext(\"-0.25\", 1, line=2.7, adj=.48, cex=2)
+#mtext(\"Average\", 3, line=.5, adj=.48, cex=2)
+
+```"

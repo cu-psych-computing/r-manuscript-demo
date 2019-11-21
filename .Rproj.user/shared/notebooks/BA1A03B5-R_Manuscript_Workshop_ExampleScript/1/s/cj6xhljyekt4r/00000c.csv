@@ -1,0 +1,4 @@
+"0","dv1 <- blm_table(model1)"
+"0","dv2 <- blm_table(model2)"
+"0","resultsummary <- rbind(dv1, dv2)"
+"0","resultsummary"

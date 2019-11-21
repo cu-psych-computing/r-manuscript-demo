@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1574342888719.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "18A00C8F",
+    "lastKnownWriteTime" : 1574348988,
+    "last_content_update" : 1574348988080,
+    "path" : "~/Desktop/WorkSchool/Graduate School/Columbia PhD/Research Projects/R_Manuscript_Workshop_Fall2019/R_Manuscript_Workshop_Slides.Rmd",
+    "project_path" : "R_Manuscript_Workshop_Slides.Rmd",
+    "properties" : {
+        "cursorPosition" : "150,23",
+        "last_setup_crc32" : "66C65958820b08f2",
+        "scrollLine" : "124"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

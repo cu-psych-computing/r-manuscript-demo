@@ -1,0 +1,109 @@
+---
+title             : "My Awesome Manuscript"
+shorttitle        : "Awesomeness"
+
+author: 
+  - name          : "Katherine S. Zee"
+    affiliation   : "1"
+    corresponding : yes    # Define only one corresponding author
+    address       : "Postal address"
+    email         : "my@email.com"
+
+affiliation:
+  - id            : "1"
+    institution   : "Columbia University"
+
+author_note: |
+  This research was supported by no funding.
+
+
+abstract: |
+  This amazing study addresses many gaps in the literature and across one study produced significant results
+
+  
+keywords          : "my paper, psychology"
+
+
+bibliography      : ["MyLibrary.bib"]
+
+figsintext        : no
+figurelist        : no
+tablelist         : no
+footnotelist      : no
+lineno            : no
+
+lang              : "english"
+class             : "man"
+output            : papaja::apa6_pdf
+csl               : apa-with-doi-no-issue.csl
+
+
+---
+
+```{r load_packages, include = FALSE}
+library("papaja")
+```
+
+
+```{r options for file, include=F, echo = F}
+knitr::opts_chunk$set(echo = F, cache = T) 
+# This command will cache all of our code chunks, which will help with run times as you make edits
+```
+
+
+```{r echo=F, results = "hide", warning=FALSE, include = F}
+source("R_Manuscript_Workshop_ExampleSetUp.R", echo=F)
+
+
+# If sourcing from an .Rmd file, run this instead: 
+ksource <- function(x, ...) {
+  library(knitr)
+  source(purl(x, output = tempfile()), ...)
+}
+
+# then run: 
+ksource("R_Manuscript_Workshop_ExampleScript.Rmd")
+
+```
+
+
+
+# Introduction
+  Much research has investigated how invisible support relative to visible support benefits recipients [@Bolger2000; @Bolger2007; @Howland2010a]. In one noteworthy investigation, Girme and colleagues [-@Girme2013] showed that invisible support predicts benefits to goal pursuit over time.
+  
+# Study 1
+  Study 1 aimed to test our hypothesis. 
+
+## Method
+  We downloaded some data from the internet. It was a study of individuals in a romantic relationship. 
+  
+## Results
+  First, we examined the effect of x on m. Contrary to our predictions, we found no main effect of x on m, `r txt(model1, "x")`. However, we did find a main effect of x on y, `r txt(model2, "x")`.
+
+# Discussion
+  These findings have many important implications.
+
+# Discussion
+  These findings have many important implications.
+
+# Tables
+
+```{r results = "asis", echo = F}
+resultsummary2 <- resultsummary %>% 
+  mutate(N_Subj = as.character(N_Subj)) %>% 
+  mutate_if(is.numeric, funs(roundto3))
+
+options(knitr.kable.NA = '')
+kable(resultsummary2, "latex", linesep = " ", booktabs = T, align = c("l", "l", "c", "c", "c", "c", "c", "c", "c")) %>%
+  kable_styling(full_width = F, position = "left", font_size = 10) %>%
+  row_spec(3, hline_after=T) %>%
+  row_spec(6, hline_after=T)  
+```
+
+# References
+```{r create_r-references}
+r_refs(file = "MyLibrary.bib")
+```
+
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{0.5in}

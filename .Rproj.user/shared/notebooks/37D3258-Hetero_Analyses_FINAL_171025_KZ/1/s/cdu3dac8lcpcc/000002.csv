@@ -1,0 +1,26 @@
+"0","```r
+#Read in data
+RTexptboth <- read.csv(\"randomeffects_overtime_dataset.csv\")
+
+
+#RTexptboth <- RTboth
+## ^ are these the same things??
+
+# With effect-coded valence as -.5, +.5
+
+logRTboth <- lmer(rt_log ~ -1 + RTexptboth$t1 + RTexptboth$t2 
+                  + RTexptboth$t1:RTexptboth$valenceE
+                  + RTexptboth$t2:RTexptboth$valenceE +
+                    (-1 + RTexptboth$t1 + RTexptboth$t2 
+                     + RTexptboth$t1:RTexptboth$valenceE
+                     + RTexptboth$t2:RTexptboth$valenceE | subj), 
+                  data=RTexptboth)
+summary(logRTboth)
+
+ranefboth <- ranef(logRTboth)$subj
+ranefboth$t1_valenceE <-  ranefboth$`RTexptboth$t1:RTexptboth$valenceE` + -0.13944   
+ranefboth$t2_valenceE <-  ranefboth$`RTexptboth$t2:RTexptboth$valenceE` + -0.19152
+cor(ranef(logRTboth)$subj)
+
+
+```"

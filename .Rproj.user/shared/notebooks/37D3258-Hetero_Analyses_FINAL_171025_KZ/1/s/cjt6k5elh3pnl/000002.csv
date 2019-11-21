@@ -1,0 +1,50 @@
+"0","```r
+
+
+#Order by Ranef Size
+
+ranfacem1.ranef<-ranef(ranfacem1)$id #Get Ranefs for f01
+ranfacem1.ranef$id <- as.numeric(row.names(ranfacem1.ranef)) #Add ID Column
+
+ranfacem1.ranef$fosum <- ranfacem1.ranef$fo + fixef(ranfacem1)[2]
+
+ordranfacem1.ranef <- ranfacem1.ranef[order(ranfacem1.ranef$fosum), ]
+
+#Add Predicted Values to ranface
+ranfacefo1$pred <- fitted(ranfacem1)
+
+#Order ranface by Participant, Face-orientation, predicted value
+ordranfacefo1 <- ranfacefo1[order(ranfacefo1$id, 
+                            ranfacefo1$fo, ranfacefo1$pred), ]
+
+#Calculate quantiles for dotplot
+ranfacem1.quant <- as.vector(quantile(ranfacem1.ranef$fosum, probs=c(.025, .975)))
+
+# Face Orientation Dotplot
+pdf(\"ranface_Dotplot_171013.pdf\", h = 4, w = 10)
+stripchart(ranfacem1.ranef$fosum, pch=21, bg=\"skyblue\", cex=2.5, lwd=2,
+           xlim=c(-.45, .1), xlab=\"Face Orientation Effect (logRT units)\", cex.axis=1.5, cex.lab=1.5)
+abline(v=c(ranfacem1.quant[1], fixef(ranfacem1)[2], ranfacem1.quant[2]), col = c(\"red\", \"black\", \"red\"), lty = c(\"dashed\", \"solid\", \"dashed\"),
+       lwd = 3)
+dev.off()
+
+
+
+#Panel plots ordered by size of fo1 random effect
+# For subset of IDs (with correct color scheme)
+pdf(file=\"ranface_panelplotbyranef_subIDs_171013.pdf\", width=7, height=10)
+par(mfrow=c(3,3))
+for (i in c(4, 11, 3, 22, 23, 10, 8, 14, 21)) {  
+  plot(jitter(ordranfacefo1$fo[ordranfacefo1$id==i], .1), ordranfacefo1$logrt[ordranfacefo1$id==i], 
+       ylab=\"Log RT\", col = \"blue\", xlab=\"Face Orientation\", type=\"p\", cex = 1, pch=19, xlim=c(-.5, .5), ylim=c(3.5,7),  xaxt = 'n',
+       main=paste(round(ordranfacem1.ranef$fosum[ordranfacem1.ranef$Participant==i], digits=2)))
+  axis(1, at=c(-.5,.5), labels=c(\"Upside Down\", \"Upright\"))
+  lines(ordranfacefo1$fo[ordranfacefo1$id==i], 
+  ordranfacefo1$pred[ordranfacefo1$id==i], col = \"red\", lwd = 2) 
+
+}
+mtext(\"Log RT by Face Orientation, IDs Sorted by Size of Random Slope\n\", side=3, outer=TRUE, line=-1.2)
+dev.off()
+
+
+```"

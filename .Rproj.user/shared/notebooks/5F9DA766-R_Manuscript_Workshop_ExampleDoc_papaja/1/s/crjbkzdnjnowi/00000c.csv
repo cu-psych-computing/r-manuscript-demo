@@ -1,0 +1,8 @@
+"0","resultsummary2 <- resultsummary %>% "
+"0","  mutate(N_Subj = as.character(N_Subj)) %>% "
+"0","  mutate_if(is.numeric, funs(roundto3))"
+"0","options(knitr.kable.NA = '')"
+"0","kable(resultsummary2, ""latex"", linesep = "" "", booktabs = T, align = c(""l"", ""l"", ""c"", ""c"", ""c"", ""c"", ""c"", ""c"", ""c"")) %>%"
+"0","  kable_styling(full_width = F, position = ""left"", font_size = 10) %>%"
+"0","  row_spec(3, hline_after=T) %>%"
+"0","  row_spec(6, hline_after=T)  "

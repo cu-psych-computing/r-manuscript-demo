@@ -1,0 +1,22 @@
+"0","ksource <- function(x, ...) {
+  library(knitr)
+  source(purl(x, output = tempfile()), ...)
+}
+# then run: 
+ksource(""R_Manuscript_Workshop_ExampleScript.Rmd"")
+"
+"2","
+
+processing file: R_Manuscript_Workshop_ExampleScript.Rmd
+"
+"1","  |                                                                       "
+"1","  |                                                                 |   0%"
+"1","  |                                                                       "
+"1","  |.....                                                            |   8%"
+"1","  |                                                                       "
+"1","  |..........                                                       |  15%"
+"2","Quitting from lines 17-18 (R_Manuscript_Workshop_ExampleScript.Rmd) 
+"
+"2","Error in if (params$engine != ""R"") return(one_string(comment_out(knit_code$get(label)))) : 
+  argument is of length zero
+"
