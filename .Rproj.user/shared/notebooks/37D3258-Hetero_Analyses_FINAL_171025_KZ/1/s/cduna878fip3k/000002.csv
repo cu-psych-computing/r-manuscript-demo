@@ -1,7 +1,0 @@
-"0","```r
-
-# For working draft of script, see file RanData_Heterogeneity_170215
-
-math <- read.csv(\"heterogeneity_dataset3_mathprime.csv\")
-
-```"

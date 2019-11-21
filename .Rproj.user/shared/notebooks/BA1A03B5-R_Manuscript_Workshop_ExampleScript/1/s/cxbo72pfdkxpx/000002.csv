@@ -1,4 +1,0 @@
-"0","model1 <- readRDS(""model1.rds"")"
-"2","cannot open compressed file 'model1.rds', probable reason 'No such file or directory'"
-"2","Error in gzfile(file, ""rb"") : cannot open the connection
-"

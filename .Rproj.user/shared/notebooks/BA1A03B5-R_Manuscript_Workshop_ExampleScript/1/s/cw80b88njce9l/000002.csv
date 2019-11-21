@@ -1,2 +1,0 @@
-"0","# for simplicity, we will only look at data from the first time point"
-"0","mydata <- subset(BLch9, time == 1)"
